@@ -3,9 +3,11 @@ from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
-import os
 import numpy as np
 from offers import offers
+from salary import salary
+from seniority import seniority
+from technologies import technologies
 
 csv_files = {
     '2023-09-01': pd.read_csv('./dataset/202309_soft_eng_jobs_pol.csv'),
@@ -34,7 +36,7 @@ all_offers['salary employment mean'] = round(
     all_offers['salary employment min'] * 0.5 + all_offers['salary employment max'] * 0.5)
 all_offers['salary b2b mean'] = round(all_offers['salary b2b min'] * 0.5 + all_offers['salary b2b max'] * 0.5)
 all_offers['contract type'] = all_offers.apply(lambda x: 'both' if (
-            (np.isnan(x['salary employment mean']) == False) & (np.isnan(x['salary b2b mean']) == False)) else False,
+        (np.isnan(x['salary employment mean']) == False) & (np.isnan(x['salary b2b mean']) == False)) else False,
                                                axis=1)
 all_offers['contract type'] = all_offers.apply(
     lambda x: 'b2b' if ((x['contract type'] == False) & (np.isnan(x['salary employment mean']) == True)) else x[
@@ -49,20 +51,6 @@ all_offers['company size'] = all_offers['company size'].transform(
     lambda x: None if np.isnan(x) else str(round(x)) + "+")
 all_offers['is remote'] = all_offers['location'].transform(lambda x: 'Non Remote' if x != 'Remote' else x)
 latest = all_offers[all_offers['report date'] == all_offers['report date'].unique().max()]
-
-# Przykładowe dane
-df = px.data.stocks().rename(columns={"date": "Date"})
-df_melt = df.melt(id_vars="Date", var_name="Company", value_name="Stock Price")
-
-# Wykresy
-fig_line = px.line(df, x="Date", y=df.columns[1:], title="Stock Prices Over Time")
-fig_bar = px.bar(df_melt[df_melt["Date"] == df["Date"].max()],
-                 x="Company", y="Stock Price", title="Stock Prices on Last Date")
-
-fig1 = px.scatter(px.data.iris(), x="sepal_width", y="sepal_length", color="species")
-fig2 = px.scatter(px.data.iris(), x="petal_width", y="petal_length", color="species")
-fig3 = px.bar(px.data.tips(), x="day", y="total_bill", color="sex")
-fig4 = px.pie(px.data.tips(), values="tip", names="day")
 
 
 def layout_home():
@@ -121,7 +109,6 @@ def layout_offers():
             dbc.Col(dcc.Graph(figure=offers.show_latest_offers(latest)), width=6),
         ]),
         dbc.Row([dcc.Graph(figure=offers.show_cities_for_all_offers(all_offers))], style={"margin-top": "2rem"}),
-        dbc.Row([dcc.Graph(figure=offers.show_cities_for_latest_offers(latest))], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
 
@@ -129,9 +116,12 @@ def layout_salaries():
     return html.Div([
         html.H2("Porównanie wynagrodzeń"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=fig1), width=6),
-            dbc.Col(dcc.Graph(figure=fig2), width=6),
-        ])
+            dbc.Col(dcc.Graph(figure=salary.show_salary_distribution_by_contract_type(all_offers)), width=12),
+        ]),
+        dbc.Row([dcc.Graph(figure=salary.show_salary_by_company_size_b2b(all_offers))], style={"margin-top": "2rem"}),
+        dbc.Row([dcc.Graph(figure=salary.show_salary_by_company_size_uop(all_offers))], style={"margin-top": "2rem"}),
+        dbc.Row([dcc.Graph(figure=salary.show_salary_by_technology(all_offers, latest))], style={"margin-top": "2rem"}),
+        dbc.Row([dcc.Graph(figure=salary.show_salary_by_city(all_offers, latest))], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
 
@@ -139,9 +129,17 @@ def layout_seniority():
     return html.Div([
         html.H2("Porównanie poziomu doświadczenia"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=fig1), width=6),
-            dbc.Col(dcc.Graph(figure=fig2), width=6),
-        ])
+            dbc.Col(dcc.Graph(figure=seniority.show_seniority_distribution(all_offers)), width=12),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=seniority.show_seniority_trends_over_time(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=seniority.show_seniority_by_city(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=seniority.show_technology_by_seniority(latest)), width=12),
+        ], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
 
@@ -149,9 +147,34 @@ def layout_technologies():
     return html.Div([
         html.H2("Porównanie technologii i typów kontraktów"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=fig3), width=6),
-            dbc.Col(dcc.Graph(figure=fig4), width=6),
-        ])
+            dbc.Col(dcc.Graph(figure=technologies.show_technology_distribution(all_offers)), width=12),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=technologies.show_popular_technologies_treemap_all_offers(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=technologies.show_popular_technologies_treemap_latest(latest)), width=12),
+        ], style={"margin-top": "2rem"}),
+        # dbc.Row([
+        #     dbc.Col(dcc.Graph(figure=technologies.show_remote_contract_types(all_offers)), width=12),
+        # ], style={"margin-top": "2rem"}),
+        # dbc.Row([
+        #     dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers)), width=12),
+        # ], style={"margin-top": "2rem"}),
+        # dbc.Row([
+        #     dbc.Col(dcc.Graph(figure=technologies.show_technology_by_city(all_offers)), width=12),
+        # ], style={"margin-top": "2rem"}),
+    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+
+def layout_contracts():
+    return html.Div([
+        html.H2("Preferowane typy kontraktów"),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=technologies.show_contract_types_by_city(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=technologies.show_remote_contract_types(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
 
@@ -166,7 +189,8 @@ sidebar = html.Div(
             [
                 dbc.NavLink("Wprowadzenie", href="/", active="exact"),
                 dbc.NavLink("Oferty per miasto", href="/offers", active="exact"),
-                dbc.NavLink("Technologie i typy kontraktów", href="/tech_stack", active="exact"),
+                dbc.NavLink("Stosowane technologie", href="/tech_stack", active="exact"),
+                dbc.NavLink("Preferowane typy kontraktów", href="/contracts", active="exact"),
                 dbc.NavLink("Porównanie wynagrodzeń", href="/salaries", active="exact"),
                 dbc.NavLink("Porównanie poziomu doświadczenia", href="/seniority", active="exact"),
             ],
@@ -186,12 +210,12 @@ sidebar = html.Div(
     },
 )
 
-
 app.layout = html.Div([
     dcc.Location(id="url"),
     sidebar,
     html.Div(id="page-content")
 ])
+
 
 @app.callback(
     Output("page-content", "children"),
@@ -206,6 +230,8 @@ def display_page(pathname):
         return layout_salaries()
     elif pathname == "/seniority":
         return layout_seniority()
+    elif pathname == "/contracts":
+        return layout_contracts()
     else:
         return layout_home()
 
