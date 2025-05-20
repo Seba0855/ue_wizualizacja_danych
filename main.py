@@ -116,8 +116,11 @@ def layout_salaries():
     return html.Div([
         html.H2("Porównanie wynagrodzeń"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=salary.show_salary_distribution_by_contract_type(all_offers)), width=12),
+            dbc.Col(dcc.Graph(figure=salary.show_salary_by_seniority(all_offers)), width=12),
         ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=salary.show_salary_distribution_by_contract_type(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_company_size_b2b(all_offers))], style={"margin-top": "2rem"}),
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_company_size_uop(all_offers))], style={"margin-top": "2rem"}),
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_technology(all_offers, latest))], style={"margin-top": "2rem"}),
@@ -132,13 +135,13 @@ def layout_seniority():
             dbc.Col(dcc.Graph(figure=seniority.show_seniority_distribution(all_offers)), width=12),
         ]),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=seniority.show_seniority_trends_over_time(all_offers)), width=12),
-        ], style={"margin-top": "2rem"}),
-        dbc.Row([
             dbc.Col(dcc.Graph(figure=seniority.show_seniority_by_city(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
         dbc.Row([
             dbc.Col(dcc.Graph(figure=seniority.show_technology_by_seniority(latest)), width=12),
+        ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=seniority.show_seniority_trends_over_time(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
@@ -155,15 +158,9 @@ def layout_technologies():
         dbc.Row([
             dbc.Col(dcc.Graph(figure=technologies.show_popular_technologies_treemap_latest(latest)), width=12),
         ], style={"margin-top": "2rem"}),
-        # dbc.Row([
-        #     dbc.Col(dcc.Graph(figure=technologies.show_remote_contract_types(all_offers)), width=12),
-        # ], style={"margin-top": "2rem"}),
-        # dbc.Row([
-        #     dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers)), width=12),
-        # ], style={"margin-top": "2rem"}),
-        # dbc.Row([
-        #     dbc.Col(dcc.Graph(figure=technologies.show_technology_by_city(all_offers)), width=12),
-        # ], style={"margin-top": "2rem"}),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers)), width=12),
+        ], style={"margin-top": "2rem"}),
     ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
 
 def layout_contracts():

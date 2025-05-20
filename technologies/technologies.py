@@ -68,67 +68,6 @@ def show_contract_type_by_technology(all_offers):
 
     return fig
 
-def show_technology_by_city(all_offers):
-    """
-    Creates a heatmap showing the distribution of technologies by city
-    """
-    # Explode the technology column to get one row per technology
-    tech_data = all_offers.explode('technology')
-
-    # Filter out remote jobs
-    non_remote = tech_data[tech_data['location'] != 'Remote']
-
-    # Get top cities and technologies
-    top_cities = non_remote['location'].value_counts().head(8).index.tolist()
-    top_techs = non_remote['technology'].value_counts().head(8).index.tolist()
-
-    # Filter for top cities and technologies
-    filtered_data = non_remote[
-        (non_remote['location'].isin(top_cities)) & 
-        (non_remote['technology'].isin(top_techs))
-    ]
-
-    # Create a pivot table using size() to count occurrences
-    tech_city_pivot = filtered_data.groupby(['technology', 'location']).size().unstack(fill_value=0)
-
-    # Normalize by city (column)
-    tech_city_norm = tech_city_pivot.div(tech_city_pivot.sum(axis=0), axis=1)
-
-    # Create heatmap
-    fig = px.imshow(
-        tech_city_norm,
-        labels=dict(x="Miasto", y="Technologia", color="Proporcja ofert"),
-        x=tech_city_norm.columns,
-        y=tech_city_norm.index,
-        color_continuous_scale='Viridis',
-        title='Popularność technologii w różnych miastach',
-        width=1000,
-        height=800
-    )
-
-    fig.update_layout(
-        xaxis=dict(side="bottom"),
-        coloraxis_colorbar=dict(
-            title="Proporcja ofert",
-            tickvals=[0, 0.25, 0.5, 0.75, 1],
-            ticktext=["0%", "25%", "50%", "75%", "100%"]
-        )
-    )
-
-    # Add text annotations
-    for i in range(len(tech_city_norm.index)):
-        for j in range(len(tech_city_norm.columns)):
-            value = tech_city_norm.iloc[i, j]
-            fig.add_annotation(
-                x=j,
-                y=i,
-                text=f"{value:.0%}",
-                showarrow=False,
-                font=dict(color="white" if value > 0.5 else "black")
-            )
-
-    return fig
-
 def show_technology_trends_over_time(all_offers):
     """
     Creates a line plot showing trends in job offers for top technologies over time
