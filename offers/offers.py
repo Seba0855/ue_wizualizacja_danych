@@ -1,10 +1,4 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import plotly.express as px
-import seaborn as sns
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 wspolrzedne_miast = {
     'Warszawa': (52.2297, 21.0122),
@@ -22,7 +16,8 @@ wspolrzedne_miast = {
     'Toruń': (53.0138, 18.5984)
 }
 
-def show_all_offers(all, title = "Liczba ofert per miasto od września 2023 do czerwca 2024"):
+
+def show_all_offers(all, location_colors, title="Liczba ofert per miasto od września 2023 do czerwca 2024"):
     filtered_df = all[all["location"] != "Remote"]
 
     location_counts = filtered_df["location"].value_counts().reset_index()
@@ -34,8 +29,8 @@ def show_all_offers(all, title = "Liczba ofert per miasto od września 2023 do c
                  text="count",
                  width=800,
                  color="location",
-                 color_discrete_sequence=px.colors.qualitative.Dark2,
-             )
+                 color_discrete_map=location_colors,
+                 )
 
     fig.update_traces(textposition="outside")
     fig.update_xaxes(categoryorder="total descending")
@@ -44,12 +39,15 @@ def show_all_offers(all, title = "Liczba ofert per miasto od września 2023 do c
     fig.write_html("offers/all_offers.html")
     return fig
 
-def show_latest_offers(latest):
-    fig = show_all_offers(latest, title="Liczba ofert per miasto w dniu 1 czerwca 2024")
+
+def show_latest_offers(latest, location_colors):
+    fig = show_all_offers(latest, location_colors, title="Liczba ofert per miasto w dniu 1 czerwca 2024")
     fig.write_html("offers/latest_offers.html")
     return fig
 
-def show_cities_for_all_offers(all, title="Liczba ofert pracy dla programistów w polskich miastach od września 2023 do czerwca 2024"):
+
+def show_cities_for_all_offers(all,
+                               title="Liczba ofert pracy dla programistów w polskich miastach od września 2023 do czerwca 2024"):
     miasta_all = all[all['location'] != 'Remote']['location'].value_counts().reset_index()
     miasta_all.columns = ['miasto', 'liczba_ofert']
 
@@ -80,7 +78,9 @@ def show_cities_for_all_offers(all, title="Liczba ofert pracy dla programistów 
     fig.write_html("offers/cities_for_all_offers.html")
     return fig
 
+
 def show_cities_for_latest_offers(latest):
-    fig = show_cities_for_all_offers(latest, title = "Liczba ofert pracy dla programistów w polskich miastach w dniu 1 czerwca 2024")
+    fig = show_cities_for_all_offers(latest,
+                                     title="Liczba ofert pracy dla programistów w polskich miastach w dniu 1 czerwca 2024")
     fig.write_html("offers/cities_for_latest_offers.html")
     return fig

@@ -8,16 +8,11 @@ from plotly.subplots import make_subplots
 from math import pi
 
 def show_seniority_trends_over_time(all_offers):
-    """
-    Creates a line plot showing trends in job offers by seniority level over time
-    """
-    # Group data by month and seniority level
     seniority_trends = all_offers.groupby([
         pd.Grouper(key='report date', freq='ME'),
         'seniority'
     ]).size().reset_index(name='count')
     
-    # Create line plot
     fig = px.line(
         seniority_trends,
         x='report date',
@@ -50,45 +45,29 @@ def show_seniority_trends_over_time(all_offers):
     return fig
 
 def show_technology_by_seniority(latest_offers):
-    """
-    Creates a radar chart comparing technologies by seniority level
-    """
-    # Explode the technology column and group by technology and seniority
     tech_senior = latest_offers.explode('technology').groupby(['technology', 'seniority']).size().unstack()
-    
-    # Calculate the proportion of each seniority level within each technology
     tech_senior = tech_senior.div(tech_senior.sum(axis=1), axis=0)
-    
-    # Fill NaN values with 0
     tech_senior = tech_senior.fillna(0)
-    
-    # Get the top technologies by total count
     top_techs = latest_offers.explode('technology')['technology'].value_counts().head(10).index.tolist()
-    
-    # Filter for top technologies
     tech_senior = tech_senior.loc[tech_senior.index.isin(top_techs)]
     
-    # Create radar chart
     categories = tech_senior.index.tolist()
     N = len(categories)
     
-    # Calculate angles for radar chart
     angles = [n / float(N) * 2 * pi for n in range(N)]
     angles += angles[:1]  # Close the loop
     
-    # Create figure
     fig = go.Figure()
     
-    # Add traces for each seniority level
     colors = px.colors.qualitative.Dark2
     
     for i, seniority in enumerate(tech_senior.columns):
         values = tech_senior[seniority].tolist()
-        values += values[:1]  # Close the loop
+        values += values[:1]
         
         fig.add_trace(go.Scatterpolar(
             r=values,
-            theta=categories + [categories[0]],  # Close the loop
+            theta=categories + [categories[0]],
             name=seniority,
             line=dict(color=colors[i], width=2),
             fill='toself',
@@ -122,21 +101,15 @@ def show_technology_by_seniority(latest_offers):
     return fig
 
 def show_seniority_distribution(all_offers):
-    """
-    Creates a bar chart showing the distribution of seniority levels
-    """
     seniority_counts = all_offers['seniority'].value_counts().reset_index()
     seniority_counts.columns = ['seniority', 'count']
-    
-    # Define the correct order of seniority levels
+
     seniority_order = ['junior', 'mid', 'senior', 'expert']
     
-    # Create a custom order for the seniority levels
     seniority_counts['seniority_order'] = seniority_counts['seniority'].map(
         {level: i for i, level in enumerate(seniority_order)}
     )
     
-    # Sort by the custom order
     seniority_counts = seniority_counts.sort_values('seniority_order')
     
     fig = px.bar(
@@ -157,17 +130,11 @@ def show_seniority_distribution(all_offers):
     return fig
 
 def show_seniority_by_city(all_offers):
-    """
-    Creates a stacked bar chart showing the distribution of seniority levels by city
-    """
-    # Filter out remote jobs and get top cities
     non_remote = all_offers[all_offers['location'] != 'Remote']
     top_cities = non_remote['location'].value_counts().head(10).index.tolist()
     
-    # Filter for top cities
     city_data = non_remote[non_remote['location'].isin(top_cities)]
     
-    # Group by city and seniority
     city_seniority = city_data.groupby(['location', 'seniority']).size().reset_index(name='count')
     
     fig = px.bar(

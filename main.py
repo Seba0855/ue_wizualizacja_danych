@@ -1,13 +1,14 @@
 import dash
-from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
-import plotly.express as px
-import pandas as pd
 import numpy as np
+import pandas as pd
+from dash import dcc, html, Input, Output
+
 from offers import offers
 from salary import salary
 from seniority import seniority
 from technologies import technologies
+from contracts import contracts
 
 csv_files = {
     '2023-09-01': pd.read_csv('./dataset/202309_soft_eng_jobs_pol.csv'),
@@ -52,12 +53,27 @@ all_offers['company size'] = all_offers['company size'].transform(
 all_offers['is remote'] = all_offers['location'].transform(lambda x: 'Non Remote' if x != 'Remote' else x)
 latest = all_offers[all_offers['report date'] == all_offers['report date'].unique().max()]
 
+unique_technologies = all_offers["technology"].unique()
+unique_cities = all_offers["location"].unique()
+
+# Paleta dostosowana dla osób z zaburzeniami widzenia barw
+colors = [
+    '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+    '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
+    '#aec7e8', '#ffbb78', '#98df8a', '#ff9896', '#c5b0d5',
+    '#c49c94', '#f7b6d2', '#c7c7c7', '#dbdb8d', '#9edae5'
+]
+
+technology_colors = dict(zip(unique_technologies, colors[:len(unique_technologies)]))
+location_colors = dict(zip(unique_cities, colors[:len(unique_cities)]))
+
 
 def layout_home():
     return html.Div(
         [
             html.H1("Analiza ofert pracy programistów w Polsce", style={"margin-top": "2rem"}),
-            html.P("Sebastian Matuszczyk, Mateusz Kasprzak", style={"margin-top": "0.5rem", "font-weight": "500", "color": "gray"}),
+            html.P("Sebastian Matuszczyk, Mateusz Kasprzak",
+                   style={"margin-top": "0.5rem", "font-weight": "500", "color": "gray"}),
             html.P(
                 "Celem naszego projektu było przygotowanie zestawienia przedstawiającego informacje na temat zarobków i ilości ofert pracy w największych miastach Polski. Przygotowane przez nas wizualizacje mogą być pomocne dla osób, które chcą zorientować się w aktualnej sytuacji rynkowej w sektorze IT.",
                 style={"margin-top": "2rem"}),
@@ -106,8 +122,8 @@ def layout_offers():
     return html.Div([
         html.H2("Porównanie ofert względem miasta - praca stacjonarna"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=offers.show_all_offers(all_offers)), width=6),
-            dbc.Col(dcc.Graph(figure=offers.show_latest_offers(latest)), width=6),
+            dbc.Col(dcc.Graph(figure=offers.show_all_offers(all_offers, location_colors)), width=6),
+            dbc.Col(dcc.Graph(figure=offers.show_latest_offers(latest, location_colors)), width=6),
         ]),
         dbc.Row([dcc.Graph(figure=offers.show_cities_for_all_offers(all_offers))], style={"margin-top": "2rem"}),
     ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
@@ -151,7 +167,8 @@ def layout_technologies():
     return html.Div([
         html.H2("Porównanie technologii i typów kontraktów"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=technologies.show_technology_distribution(all_offers)), width=12),
+            dbc.Col(dcc.Graph(figure=technologies.show_technology_distribution(all_offers, technology_colors)),
+                    width=12),
         ]),
         dbc.Row([
             dbc.Col(dcc.Graph(figure=technologies.show_popular_technologies_treemap_all_offers(all_offers)), width=12),
@@ -160,19 +177,19 @@ def layout_technologies():
             dbc.Col(dcc.Graph(figure=technologies.show_popular_technologies_treemap_latest(latest)), width=12),
         ], style={"margin-top": "2rem"}),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers)), width=12),
+            dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers, technology_colors)),
+                    width=12),
         ], style={"margin-top": "2rem"}),
     ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
+
 
 def layout_contracts():
     return html.Div([
         html.H2("Preferowane typy kontraktów"),
         dbc.Row([
-            dbc.Col(dcc.Graph(figure=technologies.show_contract_types_by_city(all_offers)), width=12),
+            dbc.Col(dcc.Graph(figure=contracts.show_contract_types_by_city(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
-        dbc.Row([
-            dbc.Col(dcc.Graph(figure=technologies.show_remote_contract_types(all_offers)), width=12),
-        ], style={"margin-top": "2rem"}),
+        dbc.Row([dcc.Graph(figure=contracts.show_remote_contract_types(all_offers))], style={"margin-top": "2rem"}),
     ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 

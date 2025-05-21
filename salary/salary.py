@@ -1,15 +1,18 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import plotly.express as px
-import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+color_map = {
+    'junior': '#56B4E9',
+    'mid': '#009E73',
+    'senior': '#E69F00',
+    'expert': '#CC79A7'
+}
+
+
 def show_salary_distribution_by_contract_type(all_offers):
-    """
-    Creates a histogram showing the salary distribution for B2B vs UoP contracts
-    """
     b2b_salaries = all_offers[all_offers['contract type'] == 'b2b']['salary b2b mean'].dropna()
     uop_salaries = all_offers[all_offers['contract type'] == 'employment']['salary employment mean'].dropna()
 
@@ -31,10 +34,8 @@ def show_salary_distribution_by_contract_type(all_offers):
     fig.write_html("salary/salary_distribution_by_contract_type.html")
     return fig
 
+
 def show_salary_by_company_size_b2b(all_offers):
-    """
-    Creates a box plot showing the salary distribution by company size for B2B contracts
-    """
     b2b_data = all_offers[all_offers['contract type'] == 'b2b'].dropna(subset=['salary b2b mean'])
 
     fig = px.box(b2b_data,
@@ -51,10 +52,8 @@ def show_salary_by_company_size_b2b(all_offers):
     fig.write_html("salary/salary_by_company_size_b2b.html")
     return fig
 
+
 def show_salary_by_company_size_uop(all_offers):
-    """
-    Creates a box plot showing the salary distribution by company size for UoP contracts
-    """
     uop_data = all_offers[all_offers['contract type'] == 'employment'].dropna(subset=['salary employment mean'])
 
     fig = px.box(uop_data,
@@ -71,31 +70,20 @@ def show_salary_by_company_size_uop(all_offers):
     fig.write_html("salary/salary_by_company_size_uop.html")
     return fig
 
-def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, tekst_segmentu, kolejność=None):
-    """
-    Creates a grid of histograms showing salary distributions for different experience levels
-    across different segments (technology, location, etc.)
-    """
-    latest_offers_clean = latest_offers.copy()
 
-    # Create 'offer' column as mean of salary ranges
+def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, tekst_segmentu, kolejność=None):
+    latest_offers_clean = latest_offers.copy()
     latest_offers_clean['offer'] = np.nan
 
-    # For B2B contracts
     b2b_mask = latest_offers_clean['contract type'] == 'b2b'
     latest_offers_clean.loc[b2b_mask, 'offer'] = latest_offers_clean.loc[b2b_mask, 'salary b2b mean']
 
-    # For employment contracts
     emp_mask = latest_offers_clean['contract type'] == 'employment'
     latest_offers_clean.loc[emp_mask, 'offer'] = latest_offers_clean.loc[emp_mask, 'salary employment mean']
 
-    # For both contract types, take the average
     both_mask = latest_offers_clean['contract type'] == 'both'
-    latest_offers_clean.loc[both_mask, 'offer'] = (
-        latest_offers_clean.loc[both_mask, 'salary b2b mean'].fillna(0) + 
-        latest_offers_clean.loc[both_mask, 'salary employment mean'].fillna(0)
-    ) / 2
-
+    latest_offers_clean.loc[both_mask, 'offer'] = (latest_offers_clean.loc[both_mask, 'salary b2b mean'].fillna(0) +
+                                                   latest_offers_clean.loc[both_mask, 'salary employment mean'].fillna(0)) / 2
     latest_offers_clean['offer'] = pd.to_numeric(latest_offers_clean['offer'], errors='coerce')
     latest_offers_clean = latest_offers_clean[np.isfinite(latest_offers_clean['offer'])]
 
@@ -104,15 +92,12 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
     if kolejność:
         segmenty = kolejność
     else:
-        # Group by segment and count offers with salary data
         latest_salaries = latest_offers_clean[np.isfinite(latest_offers_clean['offer'])]
         segmenty = latest_salaries.groupby([nazwa_segmentu])['offer'].count().reset_index()
         segmenty = segmenty[segmenty['offer'] > 100][nazwa_segmentu].to_list()
 
-    # Kolory i układ
-    kolory = ['indianred', 'lightseagreen', 'coral', 'darkcyan']
+    kolory = ['#56B4E9', '#009E73', '#E69F00', '#CC79A7']
 
-    # Generowanie tytułów
     subplot_titles = []
     for _ in segmenty:
         for poziom in experience:
@@ -134,7 +119,7 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
             dane = latest_offers_clean.loc[
                 (latest_offers_clean['seniority'] == poziom.lower()) &
                 (latest_offers_clean[nazwa_segmentu] == segment)
-            ]
+                ]
 
             if not dane.empty:
                 mediana = round(dane['offer'].median())
@@ -154,8 +139,8 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
                         opacity=0.7,
                         nbinsx=50
                     ),
-                    row=j+1,
-                    col=i+1
+                    row=j + 1,
+                    col=i + 1
                 )
 
                 # Linia mediany
@@ -166,8 +151,8 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
                     y0=0,
                     y1=max_count * 1.1,
                     line=dict(color="black", width=3),
-                    xref=f"x{idx+1}",
-                    yref=f"y{idx+1}"
+                    xref=f"x{idx + 1}",
+                    yref=f"y{idx + 1}"
                 )
 
                 # Adnotacje
@@ -179,20 +164,20 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
                     bgcolor="white",
                     bordercolor="black",
                     borderwidth=1,
-                    xref=f"x{idx+1}",
-                    yref=f"y{idx+1}"
+                    xref=f"x{idx + 1}",
+                    yref=f"y{idx + 1}"
                 )
 
                 # Tytuł z medianą
                 fig.layout.annotations[idx].update(text=f"{poziom}<br>Mediana: {mediana} zł")
             else:
                 # Ukryj pusty wykres
-                fig.update_xaxes(visible=False, row=j+1, col=i+1)
-                fig.update_yaxes(visible=False, row=j+1, col=i+1)
+                fig.update_xaxes(visible=False, row=j + 1, col=i + 1)
+                fig.update_yaxes(visible=False, row=j + 1, col=i + 1)
                 fig.add_annotation(
                     text="<b>Brak danych</b>",
-                    xref=f"x{idx+1}",
-                    yref=f"y{idx+1}",
+                    xref=f"x{idx + 1}",
+                    yref=f"y{idx + 1}",
                     x=0.5,
                     y=0.5,
                     showarrow=False,
@@ -201,14 +186,14 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
 
     fig.update_layout(
         title_text=f"<b>Rozkład zarobków według {tekst_segmentu}</b>",
-        height=250*len(segmenty),
+        height=250 * len(segmenty),
         width=1400,
         margin=dict(t=120),
         title_x=0.5,
         title_font=dict(size=20)
     )
 
-    for i in range(1,5):
+    for i in range(1, 5):
         fig.update_xaxes(
             title_text="Wynagrodzenie (PLN)",
             row=len(segmenty),
@@ -218,41 +203,34 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
 
     return fig
 
+
 def show_salary_by_technology(all_offers, latest_offers):
-    """
-    Creates a grid of histograms showing salary distributions by technology
-    """
     fig = wykres_zarobkow_dla_segmentu(
-        all_offers, 
-        latest_offers, 
-        'technology', 
-        "technologii", 
+        all_offers,
+        latest_offers,
+        'technology',
+        "technologii",
         ['Java', 'Python', 'C#', 'C/C++', 'JavaScript', 'PHP', "Kotlin"]
     )
     fig.write_html("salary/salary_by_technology.html")
     return fig
 
+
 def show_salary_by_city(all_offers, latest_offers):
-    """
-    Creates a grid of histograms showing salary distributions by city
-    """
     fig = wykres_zarobkow_dla_segmentu(
-        all_offers, 
-        latest_offers, 
-        'location', 
-        "miasta", 
+        all_offers,
+        latest_offers,
+        'location',
+        "miasta",
         ['Warszawa', 'Katowice', 'Wrocław', 'Gdańsk']
     )
     fig.write_html("salary/salary_by_city.html")
     return fig
 
+
 def show_salary_by_seniority(all_offers):
-    """
-    Creates a histogram showing salary distribution by seniority level
-    """
     offers = all_offers.copy()
 
-    # Create 'offer' column as mean of salary ranges
     offers['offer'] = offers.apply(lambda x: get_offers(x['salary employment min'], x['salary employment max']), axis=1)
     offers = offers.drop(columns=['salary employment min', 'salary employment max', 'salary employment mean'])
     offers = offers.set_index(offers.columns[:-1].to_list())
@@ -261,7 +239,7 @@ def show_salary_by_seniority(all_offers):
     latest_offers = offers[offers['report date'] == offers['report date'].unique().max()]
 
     seniority_levels = ['junior', 'mid', 'senior', 'expert']
-    colors = ['indianred', 'lightseagreen', 'coral', 'darkcyan']
+    colors = ['#56B4E9', '#009E73', '#E69F00', '#CC79A7']
 
     fig = go.Figure()
 
@@ -310,11 +288,9 @@ def show_salary_by_seniority(all_offers):
     fig.write_html("salary/salary_by_seniority.html")
     return fig
 
+
 def get_offers(min_val, max_val):
-    """
-    Generates a distribution of salary offers based on min and max values
-    """
-    mean = (max_val + min_val)/2
-    range_val = max(mean*0.1, (max_val - min_val)/2)
-    salary = np.random.normal(mean, range_val/3, size=1000).round()
+    mean = (max_val + min_val) / 2
+    range_val = max(mean * 0.1, (max_val - min_val) / 2)
+    salary = np.random.normal(mean, range_val / 3, size=1000).round()
     return '|'.join(salary.astype('str').tolist())
