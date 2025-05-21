@@ -57,9 +57,10 @@ def layout_home():
     return html.Div(
         [
             html.H1("Analiza ofert pracy programistów w Polsce", style={"margin-top": "2rem"}),
+            html.P("Sebastian Matuszczyk, Mateusz Kasprzak", style={"margin-top": "0.5rem", "font-weight": "500", "color": "gray"}),
             html.P(
                 "Celem naszego projektu było przygotowanie zestawienia przedstawiającego informacje na temat zarobków i ilości ofert pracy w największych miastach Polski. Przygotowane przez nas wizualizacje mogą być pomocne dla osób, które chcą zorientować się w aktualnej sytuacji rynkowej w sektorze IT.",
-                style={"margin-top": "1rem"}),
+                style={"margin-top": "2rem"}),
             html.Div(
                 [
                     html.Div(
@@ -97,7 +98,7 @@ def layout_home():
                 )
             ], style={"margin": "10px 0", "display": "flex", "alignItems": "center"}),
         ],
-        style={"margin-left": "20rem", "margin-right": "2rem", "padding": "2rem 1rem"},
+        style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"},
     )
 
 
@@ -109,7 +110,7 @@ def layout_offers():
             dbc.Col(dcc.Graph(figure=offers.show_latest_offers(latest)), width=6),
         ]),
         dbc.Row([dcc.Graph(figure=offers.show_cities_for_all_offers(all_offers))], style={"margin-top": "2rem"}),
-    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+    ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 
 def layout_salaries():
@@ -125,7 +126,7 @@ def layout_salaries():
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_company_size_uop(all_offers))], style={"margin-top": "2rem"}),
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_technology(all_offers, latest))], style={"margin-top": "2rem"}),
         dbc.Row([dcc.Graph(figure=salary.show_salary_by_city(all_offers, latest))], style={"margin-top": "2rem"}),
-    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+    ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 
 def layout_seniority():
@@ -143,7 +144,7 @@ def layout_seniority():
         dbc.Row([
             dbc.Col(dcc.Graph(figure=seniority.show_seniority_trends_over_time(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
-    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+    ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 
 def layout_technologies():
@@ -161,7 +162,7 @@ def layout_technologies():
         dbc.Row([
             dbc.Col(dcc.Graph(figure=technologies.show_technology_trends_over_time(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
-    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+    ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 def layout_contracts():
     return html.Div([
@@ -172,7 +173,7 @@ def layout_contracts():
         dbc.Row([
             dbc.Col(dcc.Graph(figure=technologies.show_remote_contract_types(all_offers)), width=12),
         ], style={"margin-top": "2rem"}),
-    ], style={"margin-left": "20rem", "padding": "2rem 1rem"})
+    ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 
 
 # Aplikacja Dash
@@ -200,7 +201,7 @@ sidebar = html.Div(
         "top": 0,
         "left": 0,
         "bottom": 0,
-        "width": "18rem",
+        "width": "15rem",
         "padding": "2rem 1rem",
         "background-color": "#22223b",
         "color": "white",

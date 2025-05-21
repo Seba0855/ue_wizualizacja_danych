@@ -45,7 +45,8 @@ def show_seniority_trends_over_time(all_offers):
             x=1
         )
     )
-    
+
+    fig.write_html("seniority/seniority_trends_over_time.html")
     return fig
 
 def show_technology_by_seniority(latest_offers):
@@ -116,7 +117,8 @@ def show_technology_by_seniority(latest_offers):
             x=1
         )
     )
-    
+
+    fig.write_html("seniority/technology_by_seniority.html")
     return fig
 
 def show_seniority_distribution(all_offers):
@@ -150,7 +152,8 @@ def show_seniority_distribution(all_offers):
     
     fig.update_traces(textposition='outside')
     fig.update_layout(width=1000, height=600, showlegend=False)
-    
+
+    fig.write_html("seniority/seniority_distribution.html")
     return fig
 
 def show_seniority_by_city(all_offers):
@@ -179,5 +182,6 @@ def show_seniority_by_city(all_offers):
     
     fig.update_layout(width=1200, height=600)
     fig.update_xaxes(categoryorder='total descending')
-    
+
+    fig.write_html("seniority/seniority_by_city.html")
     return fig

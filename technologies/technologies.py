@@ -35,6 +35,7 @@ def show_technology_distribution(all_offers):
     fig.update_layout(width=1200, height=600, showlegend=False)
     fig.update_xaxes(categoryorder='total descending')
 
+    fig.write_html("technologies/technology_distribution.html")
     return fig
 
 def show_contract_type_by_technology(all_offers):
@@ -66,6 +67,7 @@ def show_contract_type_by_technology(all_offers):
     fig.update_layout(width=1200, height=600)
     fig.update_xaxes(categoryorder='total descending')
 
+    fig.write_html("technologies/contract_type_by_technology.html")
     return fig
 
 def show_technology_trends_over_time(all_offers):
@@ -115,7 +117,7 @@ def show_technology_trends_over_time(all_offers):
             x=1
         )
     )
-
+    fig.write_html("technologies/technologies_trends_over_time.html")
     return fig
 
 def show_remote_contract_types(all_offers):
@@ -151,6 +153,7 @@ def show_remote_contract_types(all_offers):
         width=750
     )
 
+    fig.write_html("technologies/remote_contract_types.html")
     return fig
 
 def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej od września 2023 do czerwca 2024"):
@@ -176,6 +179,7 @@ def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularni
         coloraxis_colorbar=dict(title="Liczba ofert")
     )
 
+    fig.write_html("technologies/popular_technologies_treemap.html")
     return fig
 
 def show_popular_technologies_treemap_latest(latest_offers):
@@ -225,4 +229,5 @@ def show_contract_types_by_city(all_offers):
         margin=dict(l=50, r=0, t=50, b=50)
     )
 
+    fig.write_html("technologies/contract_types_by_city.html")
     return fig

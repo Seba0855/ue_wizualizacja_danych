@@ -41,10 +41,13 @@ def show_all_offers(all, title = "Liczba ofert per miasto od września 2023 do c
     fig.update_xaxes(categoryorder="total descending")
     fig.update_layout(showlegend=False)
 
+    fig.write_html("offers/all_offers.html")
     return fig
 
 def show_latest_offers(latest):
-    return show_all_offers(latest, title="Liczba ofert per miasto w dniu 1 czerwca 2024")
+    fig = show_all_offers(latest, title="Liczba ofert per miasto w dniu 1 czerwca 2024")
+    fig.write_html("offers/latest_offers.html")
+    return fig
 
 def show_cities_for_all_offers(all, title="Liczba ofert pracy dla programistów w polskich miastach od września 2023 do czerwca 2024"):
     miasta_all = all[all['location'] != 'Remote']['location'].value_counts().reset_index()
@@ -74,7 +77,10 @@ def show_cities_for_all_offers(all, title="Liczba ofert pracy dla programistów 
         margin={"r": 0, "t": 50, "l": 0, "b": 0},
         coloraxis_colorbar=dict(title="Liczba ofert")
     )
+    fig.write_html("offers/cities_for_all_offers.html")
     return fig
 
 def show_cities_for_latest_offers(latest):
-    return show_cities_for_all_offers(latest, title = "Liczba ofert pracy dla programistów w polskich miastach w dniu 1 czerwca 2024")
+    fig = show_cities_for_all_offers(latest, title = "Liczba ofert pracy dla programistów w polskich miastach w dniu 1 czerwca 2024")
+    fig.write_html("offers/cities_for_latest_offers.html")
+    return fig

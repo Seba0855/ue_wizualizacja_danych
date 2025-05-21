@@ -28,6 +28,7 @@ def show_salary_distribution_by_contract_type(all_offers):
         width=1200
     )
 
+    fig.write_html("salary/salary_distribution_by_contract_type.html")
     return fig
 
 def show_salary_by_company_size_b2b(all_offers):
@@ -47,6 +48,7 @@ def show_salary_by_company_size_b2b(all_offers):
     fig.update_layout(width=1000, height=600, showlegend=False)
     fig.update_xaxes(categoryorder="category ascending")
 
+    fig.write_html("salary/salary_by_company_size_b2b.html")
     return fig
 
 def show_salary_by_company_size_uop(all_offers):
@@ -66,6 +68,7 @@ def show_salary_by_company_size_uop(all_offers):
     fig.update_layout(width=1000, height=600, showlegend=False)
     fig.update_xaxes(categoryorder="category ascending")
 
+    fig.write_html("salary/salary_by_company_size_uop.html")
     return fig
 
 def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, tekst_segmentu, kolejność=None):
@@ -219,25 +222,29 @@ def show_salary_by_technology(all_offers, latest_offers):
     """
     Creates a grid of histograms showing salary distributions by technology
     """
-    return wykres_zarobkow_dla_segmentu(
+    fig = wykres_zarobkow_dla_segmentu(
         all_offers, 
         latest_offers, 
         'technology', 
         "technologii", 
         ['Java', 'Python', 'C#', 'C/C++', 'JavaScript', 'PHP', "Kotlin"]
     )
+    fig.write_html("salary/salary_by_technology.html")
+    return fig
 
 def show_salary_by_city(all_offers, latest_offers):
     """
     Creates a grid of histograms showing salary distributions by city
     """
-    return wykres_zarobkow_dla_segmentu(
+    fig = wykres_zarobkow_dla_segmentu(
         all_offers, 
         latest_offers, 
         'location', 
         "miasta", 
         ['Warszawa', 'Katowice', 'Wrocław', 'Gdańsk']
     )
+    fig.write_html("salary/salary_by_city.html")
+    return fig
 
 def show_salary_by_seniority(all_offers):
     """
@@ -300,6 +307,7 @@ def show_salary_by_seniority(all_offers):
         width=1200,
     )
 
+    fig.write_html("salary/salary_by_seniority.html")
     return fig
 
 def get_offers(min_val, max_val):
