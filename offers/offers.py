@@ -75,12 +75,12 @@ def show_cities_for_all_offers(all,
         margin={"r": 0, "t": 50, "l": 0, "b": 0},
         coloraxis_colorbar=dict(title="Liczba ofert")
     )
-    fig.write_html("offers/cities_for_all_offers.html")
+    # fig.write_html("offers/cities_for_all_offers.html")
     return fig
 
 
 def show_cities_for_latest_offers(latest):
     fig = show_cities_for_all_offers(latest,
                                      title="Liczba ofert pracy dla programistów w polskich miastach w dniu 1 czerwca 2024")
-    fig.write_html("offers/cities_for_latest_offers.html")
+    # fig.write_html("offers/cities_for_latest_offers.html")
     return fig

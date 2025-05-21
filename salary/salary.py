@@ -11,7 +11,6 @@ color_map = {
     'expert': '#CC79A7'
 }
 
-
 def show_salary_distribution_by_contract_type(all_offers):
     b2b_salaries = all_offers[all_offers['contract type'] == 'b2b']['salary b2b mean'].dropna()
     uop_salaries = all_offers[all_offers['contract type'] == 'employment']['salary employment mean'].dropna()

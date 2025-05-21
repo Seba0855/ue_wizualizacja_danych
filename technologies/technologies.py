@@ -28,7 +28,7 @@ def show_technology_distribution(all_offers, technology_colors):
     fig.update_layout(width=1200, height=600, showlegend=False)
     fig.update_xaxes(categoryorder='total descending')
 
-    fig.write_html("technologies/technology_distribution.html")
+    # fig.write_html("technologies/technology_distribution.html")
     return fig
 
 def show_technology_trends_over_time(all_offers, technology_colors):
@@ -68,7 +68,7 @@ def show_technology_trends_over_time(all_offers, technology_colors):
             x=1
         )
     )
-    fig.write_html("technologies/technologies_trends_over_time.html")
+    # fig.write_html("technologies/technologies_trends_over_time.html")
     return fig
 
 def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej od września 2023 do czerwca 2024"):
@@ -89,7 +89,7 @@ def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularni
         coloraxis_colorbar=dict(title="Liczba ofert")
     )
 
-    fig.write_html("technologies/popular_technologies_treemap.html")
+    # fig.write_html("technologies/popular_technologies_treemap.html")
     return fig
 
 def show_popular_technologies_treemap_latest(latest_offers):

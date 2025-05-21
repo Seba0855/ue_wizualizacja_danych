@@ -1,11 +1,15 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly.express as px
-import seaborn as sns
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from math import pi
+
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+
+color_map = {
+    'junior': '#56B4E9',
+    'mid': '#009E73',
+    'senior': '#E69F00',
+    'expert': '#CC79A7'
+}
 
 def show_seniority_trends_over_time(all_offers):
     seniority_trends = all_offers.groupby([
@@ -25,7 +29,7 @@ def show_seniority_trends_over_time(all_offers):
             'count': 'Liczba ofert',
             'seniority': 'Doświadczenie'
         },
-        color_discrete_sequence=px.colors.qualitative.Dark2
+        color_discrete_map=color_map
     )
     
     fig.update_layout(
@@ -41,7 +45,7 @@ def show_seniority_trends_over_time(all_offers):
         )
     )
 
-    fig.write_html("seniority/seniority_trends_over_time.html")
+    # fig.write_html("seniority/seniority_trends_over_time.html")
     return fig
 
 def show_technology_by_seniority(latest_offers):
@@ -59,7 +63,7 @@ def show_technology_by_seniority(latest_offers):
     
     fig = go.Figure()
     
-    colors = px.colors.qualitative.Dark2
+    colors = ['#56B4E9', '#009E73', '#E69F00', '#CC79A7']
     
     for i, seniority in enumerate(tech_senior.columns):
         values = tech_senior[seniority].tolist()
@@ -72,7 +76,7 @@ def show_technology_by_seniority(latest_offers):
             line=dict(color=colors[i], width=2),
             fill='toself',
             fillcolor=colors[i],
-            opacity=0.25
+            opacity=0.5
         ))
     
     fig.update_layout(
@@ -97,7 +101,7 @@ def show_technology_by_seniority(latest_offers):
         )
     )
 
-    fig.write_html("seniority/technology_by_seniority.html")
+    # fig.write_html("seniority/technology_by_seniority.html")
     return fig
 
 def show_seniority_distribution(all_offers):
@@ -120,13 +124,13 @@ def show_seniority_distribution(all_offers):
         labels={'seniority': 'Poziom doświadczenia', 'count': 'Liczba ofert'},
         text='count',
         color='seniority',
-        color_discrete_sequence=px.colors.qualitative.Dark2
+        color_discrete_map=color_map
     )
     
     fig.update_traces(textposition='outside')
     fig.update_layout(width=1000, height=600, showlegend=False)
 
-    fig.write_html("seniority/seniority_distribution.html")
+    # fig.write_html("seniority/seniority_distribution.html")
     return fig
 
 def show_seniority_by_city(all_offers):
@@ -144,11 +148,11 @@ def show_seniority_by_city(all_offers):
         color='seniority',
         title='Rozkład poziomów doświadczenia w ofertach pracy według miast',
         labels={'location': 'Miasto', 'count': 'Liczba ofert', 'seniority': 'Poziom doświadczenia'},
-        color_discrete_sequence=px.colors.qualitative.Dark2
+        color_discrete_map=color_map
     )
     
     fig.update_layout(width=1200, height=600)
     fig.update_xaxes(categoryorder='total descending')
 
-    fig.write_html("seniority/seniority_by_city.html")
+    # fig.write_html("seniority/seniority_by_city.html")
     return fig

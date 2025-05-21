@@ -40,7 +40,7 @@ def show_contract_types_by_city(all_offers):
     )
     fig.update_xaxes(showticklabels=False)
 
-    fig.write_html("technologies/contract_types_by_city.html")
+    # fig.write_html("technologies/contract_types_by_city.html")
     return fig
 
 
