@@ -49,12 +49,15 @@ def show_seniority_trends_over_time(all_offers):
     return fig
 
 def show_technology_by_seniority(latest_offers):
+    new_order = ['junior', 'mid', 'senior', 'expert']
     tech_senior = latest_offers.explode('technology').groupby(['technology', 'seniority']).size().unstack()
     tech_senior = tech_senior.div(tech_senior.sum(axis=1), axis=0)
     tech_senior = tech_senior.fillna(0)
+    tech_senior = tech_senior[new_order]
     top_techs = latest_offers.explode('technology')['technology'].value_counts().head(10).index.tolist()
     tech_senior = tech_senior.loc[tech_senior.index.isin(top_techs)]
-    
+    print(tech_senior)
+
     categories = tech_senior.index.tolist()
     N = len(categories)
     
@@ -62,7 +65,7 @@ def show_technology_by_seniority(latest_offers):
     angles += angles[:1]  # Close the loop
     
     fig = go.Figure()
-    
+
     colors = ['#56B4E9', '#009E73', '#E69F00', '#CC79A7']
     
     for i, seniority in enumerate(tech_senior.columns):
@@ -93,11 +96,11 @@ def show_technology_by_seniority(latest_offers):
         height=800,
         legend=dict(
             title="Doświadczenie",
-            orientation="h",
+            orientation="v",
             yanchor="bottom",
-            y=1.1,
+            y=0.8,
             xanchor="right",
-            x=1
+            x=1.2
         )
     )
 

@@ -30,7 +30,7 @@ def show_salary_distribution_by_contract_type(all_offers):
         width=1200
     )
 
-    fig.write_html("salary/salary_distribution_by_contract_type.html")
+    # fig.write_html("salary/salary_distribution_by_contract_type.html")
     return fig
 
 
@@ -48,7 +48,7 @@ def show_salary_by_company_size_b2b(all_offers):
     fig.update_layout(width=1000, height=600, showlegend=False)
     fig.update_xaxes(categoryorder="category ascending")
 
-    fig.write_html("salary/salary_by_company_size_b2b.html")
+    # fig.write_html("salary/salary_by_company_size_b2b.html")
     return fig
 
 
@@ -66,7 +66,7 @@ def show_salary_by_company_size_uop(all_offers):
     fig.update_layout(width=1000, height=600, showlegend=False)
     fig.update_xaxes(categoryorder="category ascending")
 
-    fig.write_html("salary/salary_by_company_size_uop.html")
+    # fig.write_html("salary/salary_by_company_size_uop.html")
     return fig
 
 
@@ -223,7 +223,7 @@ def show_salary_by_city(all_offers, latest_offers):
         "miasta",
         ['Warszawa', 'Katowice', 'Wrocław', 'Gdańsk']
     )
-    fig.write_html("salary/salary_by_city.html")
+    # fig.write_html("salary/salary_by_city.html")
     return fig
 
 
@@ -284,7 +284,7 @@ def show_salary_by_seniority(all_offers):
         width=1200,
     )
 
-    fig.write_html("salary/salary_by_seniority.html")
+    # fig.write_html("salary/salary_by_seniority.html")
     return fig
 
 
