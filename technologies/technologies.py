@@ -1,10 +1,6 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import plotly.express as px
-import seaborn as sns
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+
 
 def show_technology_distribution(all_offers, technology_colors):
     tech_data = all_offers.explode('technology')
@@ -30,6 +26,7 @@ def show_technology_distribution(all_offers, technology_colors):
 
     # fig.write_html("technologies/technology_distribution.html")
     return fig
+
 
 def show_technology_trends_over_time(all_offers, technology_colors):
     tech_data = all_offers.explode('technology')
@@ -71,7 +68,9 @@ def show_technology_trends_over_time(all_offers, technology_colors):
     # fig.write_html("technologies/technologies_trends_over_time.html")
     return fig
 
-def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej od września 2023 do czerwca 2024"):
+
+def show_popular_technologies_treemap_all_offers(all_offers,
+                                                 title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej od września 2023 do czerwca 2024"):
     tech_by_location = all_offers.groupby(['location', 'technology']).size().reset_index(name="count")
 
     fig = px.treemap(
@@ -85,12 +84,14 @@ def show_popular_technologies_treemap_all_offers(all_offers, title="Najpopularni
     )
 
     fig.update_layout(
-        margin=dict(t=50, l=25, r=25, b=25), 
+        margin=dict(t=50, l=25, r=25, b=25),
         coloraxis_colorbar=dict(title="Liczba ofert")
     )
 
     # fig.write_html("technologies/popular_technologies_treemap.html")
     return fig
 
+
 def show_popular_technologies_treemap_latest(latest_offers):
-    return show_popular_technologies_treemap_all_offers(latest_offers, title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej w dniu 1 czerwca 2024")
+    return show_popular_technologies_treemap_all_offers(latest_offers,
+                                                        title="Najpopularniejsze technologie programistyczne dla miast i pracy zdalnej w dniu 1 czerwca 2024")

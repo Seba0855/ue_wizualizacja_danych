@@ -36,13 +36,13 @@ def show_all_offers(all, location_colors, title="Liczba ofert per miasto od wrze
     fig.update_xaxes(categoryorder="total descending")
     fig.update_layout(showlegend=False)
 
-    fig.write_html("offers/all_offers.html")
+    # fig.write_html("offers/all_offers.html")
     return fig
 
 
 def show_latest_offers(latest, location_colors):
     fig = show_all_offers(latest, location_colors, title="Liczba ofert per miasto w dniu 1 czerwca 2024")
-    fig.write_html("offers/latest_offers.html")
+    # fig.write_html("offers/latest_offers.html")
     return fig
 
 

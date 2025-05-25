@@ -11,6 +11,7 @@ color_map = {
     'expert': '#CC79A7'
 }
 
+
 def show_salary_distribution_by_contract_type(all_offers):
     b2b_salaries = all_offers[all_offers['contract type'] == 'b2b']['salary b2b mean'].dropna()
     uop_salaries = all_offers[all_offers['contract type'] == 'employment']['salary employment mean'].dropna()
@@ -82,7 +83,8 @@ def wykres_zarobkow_dla_segmentu(all_offers, latest_offers, nazwa_segmentu, teks
 
     both_mask = latest_offers_clean['contract type'] == 'both'
     latest_offers_clean.loc[both_mask, 'offer'] = (latest_offers_clean.loc[both_mask, 'salary b2b mean'].fillna(0) +
-                                                   latest_offers_clean.loc[both_mask, 'salary employment mean'].fillna(0)) / 2
+                                                   latest_offers_clean.loc[both_mask, 'salary employment mean'].fillna(
+                                                       0)) / 2
     latest_offers_clean['offer'] = pd.to_numeric(latest_offers_clean['offer'], errors='coerce')
     latest_offers_clean = latest_offers_clean[np.isfinite(latest_offers_clean['offer'])]
 
@@ -211,7 +213,7 @@ def show_salary_by_technology(all_offers, latest_offers):
         "technologii",
         ['Java', 'Python', 'C#', 'C/C++', 'JavaScript', 'PHP', "Kotlin"]
     )
-    fig.write_html("salary/salary_by_technology.html")
+    # fig.write_html("salary/salary_by_technology.html")
     return fig
 
 

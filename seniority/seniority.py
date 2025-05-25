@@ -11,12 +11,13 @@ color_map = {
     'expert': '#CC79A7'
 }
 
+
 def show_seniority_trends_over_time(all_offers):
     seniority_trends = all_offers.groupby([
         pd.Grouper(key='report date', freq='ME'),
         'seniority'
     ]).size().reset_index(name='count')
-    
+
     fig = px.line(
         seniority_trends,
         x='report date',
@@ -31,7 +32,7 @@ def show_seniority_trends_over_time(all_offers):
         },
         color_discrete_map=color_map
     )
-    
+
     fig.update_layout(
         width=1200,
         height=600,
@@ -48,6 +49,7 @@ def show_seniority_trends_over_time(all_offers):
     # fig.write_html("seniority/seniority_trends_over_time.html")
     return fig
 
+
 def show_technology_by_seniority(latest_offers):
     new_order = ['junior', 'mid', 'senior', 'expert']
     tech_senior = latest_offers.explode('technology').groupby(['technology', 'seniority']).size().unstack()
@@ -60,18 +62,18 @@ def show_technology_by_seniority(latest_offers):
 
     categories = tech_senior.index.tolist()
     N = len(categories)
-    
+
     angles = [n / float(N) * 2 * pi for n in range(N)]
     angles += angles[:1]  # Close the loop
-    
+
     fig = go.Figure()
 
     colors = ['#56B4E9', '#009E73', '#E69F00', '#CC79A7']
-    
+
     for i, seniority in enumerate(tech_senior.columns):
         values = tech_senior[seniority].tolist()
         values += values[:1]
-        
+
         fig.add_trace(go.Scatterpolar(
             r=values,
             theta=categories + [categories[0]],
@@ -81,7 +83,7 @@ def show_technology_by_seniority(latest_offers):
             fillcolor=colors[i],
             opacity=0.5
         ))
-    
+
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
@@ -107,18 +109,19 @@ def show_technology_by_seniority(latest_offers):
     # fig.write_html("seniority/technology_by_seniority.html")
     return fig
 
+
 def show_seniority_distribution(all_offers):
     seniority_counts = all_offers['seniority'].value_counts().reset_index()
     seniority_counts.columns = ['seniority', 'count']
 
     seniority_order = ['junior', 'mid', 'senior', 'expert']
-    
+
     seniority_counts['seniority_order'] = seniority_counts['seniority'].map(
         {level: i for i, level in enumerate(seniority_order)}
     )
-    
+
     seniority_counts = seniority_counts.sort_values('seniority_order')
-    
+
     fig = px.bar(
         seniority_counts,
         x='seniority',
@@ -129,21 +132,22 @@ def show_seniority_distribution(all_offers):
         color='seniority',
         color_discrete_map=color_map
     )
-    
+
     fig.update_traces(textposition='outside')
     fig.update_layout(width=1000, height=600, showlegend=False)
 
     # fig.write_html("seniority/seniority_distribution.html")
     return fig
 
+
 def show_seniority_by_city(all_offers):
     non_remote = all_offers[all_offers['location'] != 'Remote']
     top_cities = non_remote['location'].value_counts().head(10).index.tolist()
-    
+
     city_data = non_remote[non_remote['location'].isin(top_cities)]
-    
+
     city_seniority = city_data.groupby(['location', 'seniority']).size().reset_index(name='count')
-    
+
     fig = px.bar(
         city_seniority,
         x='location',
@@ -153,7 +157,7 @@ def show_seniority_by_city(all_offers):
         labels={'location': 'Miasto', 'count': 'Liczba ofert', 'seniority': 'Poziom doświadczenia'},
         color_discrete_map=color_map
     )
-    
+
     fig.update_layout(width=1200, height=600)
     fig.update_xaxes(categoryorder='total descending')
 
