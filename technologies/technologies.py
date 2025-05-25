@@ -15,13 +15,17 @@ def show_technology_distribution(all_offers, technology_colors):
         y='count',
         title='Najpopularniejsze technologie w ofertach pracy',
         labels={'technology': 'Technologia', 'count': 'Liczba ofert'},
-        text='count',
         color='technology',
         color_discrete_map=technology_colors
     )
 
-    fig.update_traces(textposition='outside')
-    fig.update_layout(width=1200, height=600, showlegend=False)
+    fig.update_layout(
+        width=1200, height=600, showlegend=False, yaxis=dict(
+            tickmode='array',
+            tickvals=[0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500],
+            ticktext=['0', '0,5k', '1k', '1,5k', '2k', '2,5k', '3k', '3,5k', '4k', '4,5k']
+        )
+    )
     fig.update_xaxes(categoryorder='total descending')
 
     # fig.write_html("technologies/technology_distribution.html")

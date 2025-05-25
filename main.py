@@ -125,6 +125,10 @@ def layout_offers():
             dbc.Col(dcc.Graph(figure=offers.show_all_offers(all_offers, location_colors)), width=6),
             dbc.Col(dcc.Graph(figure=offers.show_latest_offers(latest, location_colors)), width=6),
         ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(figure=offers.show_all_offers_per_1000(all_offers, location_colors)), width=6),
+            dbc.Col(dcc.Graph(figure=offers.show_latest_offers_per_1000(latest, location_colors)), width=6),
+        ]),
         dbc.Row([dcc.Graph(figure=offers.show_cities_for_all_offers(all_offers))], style={"margin-top": "2rem"}),
     ], style={"margin-left": "18rem", "padding": "2rem 1rem"})
 

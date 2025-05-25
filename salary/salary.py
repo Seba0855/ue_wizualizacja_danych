@@ -279,11 +279,16 @@ def show_salary_by_seniority(all_offers):
     fig.update_layout(
         title='Porównanie zarobków na tle doświadczenia',
         xaxis_title='Wynagrodzenie w tysiącach (PLN)',
-        yaxis_title='Ilość ofert',
+        yaxis_title='Liczba ofert',
         barmode='overlay',
         bargap=0.1,
         legend_title="Doświadczenie",
         width=1200,
+        yaxis=dict(
+            tickmode='array',
+            tickvals=[0, 500, 1000, 1500, 2000, 2500, 3000, 3500],
+            ticktext=['0', '0,5k', '1k', '1,5k', '2k', '2,5k', '3k', '3,5k']
+        )
     )
 
     # fig.write_html("salary/salary_by_seniority.html")

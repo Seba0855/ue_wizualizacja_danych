@@ -15,9 +15,6 @@ def show_contract_types_by_city(all_offers):
     contract_dist = contract_dist.rename(columns=contract_type_mapping)
 
     contract_dist_melted = contract_dist.melt(id_vars='Miasto', var_name='Typ kontraktu', value_name='Procent ofert')
-    contract_dist_melted['text'] = contract_dist_melted['Procent ofert'].apply(
-        lambda x: f"{x:.1f}%" if x >= 3 else ""  # Pokaż etykiety tylko dla wartości ≥3%
-    )
 
     fig = px.bar(
         contract_dist_melted,
@@ -29,7 +26,6 @@ def show_contract_types_by_city(all_offers):
         color_discrete_sequence=['#1E8449', '#77B43F', '#5D6D7E'],
         width=800,
         height=400,
-        text='text'
     )
 
     fig.update_layout(
@@ -68,5 +64,6 @@ def show_remote_contract_types(all_offers):
         color_discrete_sequence=['#1E8449', '#77B43F', '#5D6D7E'],
         width=400,
     )
+    fig.update_traces(textinfo="none")
 
     return fig

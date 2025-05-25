@@ -158,7 +158,15 @@ def show_seniority_by_city(all_offers):
         color_discrete_map=color_map
     )
 
-    fig.update_layout(width=1200, height=600)
+    fig.update_layout(
+        width=1200,
+        height=600,
+        yaxis=dict(
+            tickmode='array',
+            tickvals=[0, 500, 1000, 1500, 2000, 2500, 3000, 3500],
+            ticktext=['0', '0,5k', '1k', '1,5k', '2k', '2,5k', '3k', '3,5k']
+        )
+    )
     fig.update_xaxes(categoryorder='total descending')
 
     # fig.write_html("seniority/seniority_by_city.html")
